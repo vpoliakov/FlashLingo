@@ -115,7 +115,7 @@ var CreateCardMain = function (_React$Component) {
         key: "checkReturn",
         value: function checkReturn(event) {
             if (event.charCode == 13) {
-                var newPhrase = document.getElementById("inputEng").value;
+                var newPhrase = document.getElementById('inputEng').value;
                 this.setState({ translation: newPhrase });
             }
         }
@@ -126,7 +126,7 @@ var CreateCardMain = function (_React$Component) {
         key: "saveCard",
         value: function saveCard() {
             // TO DO
-            alert("Implement Me!!!");
+            alert('Implement Me!!!');
         }
 
         // launches the review page  
@@ -140,6 +140,5 @@ var CreateCardMain = function (_React$Component) {
 
     return CreateCardMain;
 }(React.Component); // end of class
-
 
 ReactDOM.render(React.createElement(CreateCardMain, null), document.getElementById('root'));
