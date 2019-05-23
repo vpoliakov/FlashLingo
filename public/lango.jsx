@@ -1,27 +1,27 @@
-'use strict'
+'use strict';
 
 function Card(props) {
     return 
         <div className="textCard">
             {props.children}
-    	  </div>;
+    	</div>
 }
 	
 
 function Txt(props) {
-	  if (props.phrase == undefined) {
-        return <p id="noText">Translation</p>;
-	  }
-	  else 
-        return <p>{props.phrase}</p>;
+	if (props.phrase == undefined) {
+    	return <p id="noText">Translation</p>;
+	}
+	else { 
+    	return <p>{props.phrase}</p>;
+    }
 }
 
 
 class CreateCardMain extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { translation: null }
-
+        this.state = { translation: null };
         this.checkReturn = this.checkReturn.bind(this);
         this.saveCard = this.saveCard.bind(this);
     }
@@ -30,7 +30,9 @@ class CreateCardMain extends React.Component {
         return (
             <div id="container">
                 <header>
-                    <div id="startReview"><button>Start Review</button></div>
+                    <div id="startReview">
+                    	<button>Start Review</button>
+                    </div>
                     <h1>Lango!</h1>
                 </header>
                 <main>
@@ -57,8 +59,8 @@ class CreateCardMain extends React.Component {
     // When the charCode is 13, the user has hit the return key
     checkReturn(event) {
         if (event.charCode == 13) {
-            let newPhrase = document.getElementById('inputEng').value;
-            this.setState({translation: newPhrase} );
+            const newPhrase = document.getElementById('inputEng').value;
+            this.setState({ translation: newPhrase });
   	    }
   	}
 

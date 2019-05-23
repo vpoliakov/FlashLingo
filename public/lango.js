@@ -9,7 +9,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 function Card(props) {
-    return React.createElement(
+    return;
+    React.createElement(
         "div",
         { className: "textCard" },
         props.children
@@ -23,11 +24,13 @@ function Txt(props) {
             { id: "noText" },
             "Translation"
         );
-    } else return React.createElement(
-        "p",
-        null,
-        props.phrase
-    );
+    } else {
+        return React.createElement(
+            "p",
+            null,
+            props.phrase
+        );
+    }
 }
 
 var CreateCardMain = function (_React$Component) {
@@ -39,7 +42,6 @@ var CreateCardMain = function (_React$Component) {
         var _this = _possibleConstructorReturn(this, (CreateCardMain.__proto__ || Object.getPrototypeOf(CreateCardMain)).call(this, props));
 
         _this.state = { translation: null };
-
         _this.checkReturn = _this.checkReturn.bind(_this);
         _this.saveCard = _this.saveCard.bind(_this);
         return _this;
