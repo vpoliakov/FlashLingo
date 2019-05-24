@@ -1,19 +1,21 @@
 const sqlite3 = require('sqlite3').verbose();
 
 class Database extends sqlite3.Database {
-	constructor() {
+	constructor(createTable = true) {
 		super('flashcards.db');
 		const db = this;
 
-		db.run('CREATE TABLE flashcards(\
-				user INT,\
-				text CHAR(100),\
-				translation CHAR(100),\
-				asked INT,\
-				answered INT\
-			)',
-			error => { if (error) console.log('Table creation error ', error); }
-		);
+		if (createTable) {
+			db.run('CREATE TABLE flashcards(\
+					user INT,\
+					text CHAR(100),\
+					translation CHAR(100),\
+					asked INT,\
+					answered INT\
+				)',
+				error => { if (error) console.log('Table creation error ', error); }
+			);
+		}
 	}
 
 	addFlashCard(user, text, translation) {
