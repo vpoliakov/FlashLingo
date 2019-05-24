@@ -1,3 +1,4 @@
+const fs = require('fs');
 const express = require('express');
 const request = require('request');
 const Database = require('./db.js');
@@ -9,13 +10,15 @@ const port = 55395;
 function queryHandler(req, res, next) {
 	const key = 'AIzaSyAOD5XGQ1XdvLWHFXnqcgG6mdimebiLM_0';
 	const text = req.query.message; // text to be translated
+	const save = req.query.save == 'true'; // whether to save the card to db
 	
 	function callback(err, resHead, resBody) {
 		if (err || resHead.error || resHead.statusCode != 200) throw 'API error';
 
 		const translation = resBody.data.translations[0].translatedText;
 		res.json(translation);
-		db.addFlashCard(0, text, translation);
+
+		if (save) db.addFlashCard(0, text, translation);
 	}
 
 	request(
@@ -25,7 +28,7 @@ function queryHandler(req, res, next) {
 			headers: {'content-type': 'application/json'},
 			json: {
 				source: 'en',
-				target: 'ru',
+				target: 'sv',
 				q: [text]
 			}
 		},
@@ -40,7 +43,8 @@ function fileNotFound(req, res) {
 	res.send(`Cannot find ${url}`);
 }
 
-const db = new Database();
+// if db file does not exist, create it, else open it
+const db = new Database(!fs.existsSync('flashcards.db')); // the argument is whether the file exists
 const app = express()
 app.use(express.static('public'));
 app.get('/query', queryHandler );
