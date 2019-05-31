@@ -1,13 +1,13 @@
 :root {
-	--raleway: 'Raleway', sans-serif;
-	--openSans: 'Open Sans', sans-serif;
-	--helvatica: helvetica;
 	--bigTitle: 75pt;
-	--subTitle: 45pt;
+	--dark-green: #289b14;
+	--helvatica: helvetica;
 	--loginButton: 25pt;
+	--openSans: 'Open Sans', sans-serif;
+	--raleway: 'Raleway', sans-serif;
+	--subTitle: 45pt;
 	--titleGreen: #afe0b0;
 	--titleBlue: #ccffed;
-	--dark-green: #289b14;
 }
 
 * {
