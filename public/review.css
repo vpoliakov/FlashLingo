@@ -1,0 +1,52 @@
+#buttons {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+}
+
+#cards {
+	flex-direction: column;
+}
+
+#correct {
+	background-color: var(--light-green);
+	color: green;
+	border: solid green 4px;
+	padding: 20px 20px;
+}
+
+#firstCard {
+	position: relative;
+}
+
+#prompt {
+	display: flex;
+	flex-direction: column;
+	height: 100%; 
+	width: 100%;
+}
+
+#prompt img {
+	align-self: flex-end;
+	max-width: 20%;
+	max-height: 30%;
+	position: absolute;
+	right: 0;
+	top: 0;
+
+}
+
+#prompt img:hover {
+	cursor: pointer;
+	opacity: 0.5;
+}
+
+#prompt img:active {
+  	transform: scaleY(-1);
+  	transition-duration: 0.1s;
+}
+
+
+#prompt p {
+	margin: auto;
+}
