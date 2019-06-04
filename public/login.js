@@ -11,24 +11,24 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 function Logo() {
 	return React.createElement(
 		"div",
-		{ id: "loginLogo" },
+		{ id: "login-app-logo" },
 		React.createElement(
 			"h1",
 			null,
-			"Welcome to Lango"
+			"flashlingo!"
 		),
 		React.createElement(
 			"h2",
 			null,
-			"Customize your vocabulary"
+			"Customize your vocabulary!"
 		)
 	);
 }
 
 function LoginButton(props) {
 	return React.createElement(
-		"div",
-		{ id: "loginButton" },
+		"a",
+		{ id: "login-button", href: "/auth/google" },
 		props.children
 	);
 }
@@ -39,10 +39,7 @@ var CreateLoginPage = function (_React$Component) {
 	function CreateLoginPage(props) {
 		_classCallCheck(this, CreateLoginPage);
 
-		var _this = _possibleConstructorReturn(this, (CreateLoginPage.__proto__ || Object.getPrototypeOf(CreateLoginPage)).call(this, props));
-
-		_this.googleLogin = _this.googleLogin.bind(_this);
-		return _this;
+		return _possibleConstructorReturn(this, (CreateLoginPage.__proto__ || Object.getPrototypeOf(CreateLoginPage)).call(this, props));
 	}
 
 	_createClass(CreateLoginPage, [{
@@ -61,7 +58,7 @@ var CreateLoginPage = function (_React$Component) {
 					null,
 					React.createElement(
 						LoginButton,
-						{ onclick: this.googleLogin },
+						null,
 						React.createElement("img", { src: "./assets/google.jpg" }),
 						React.createElement(
 							"p",
@@ -72,14 +69,9 @@ var CreateLoginPage = function (_React$Component) {
 				)
 			);
 		}
-	}, {
-		key: "googleLogin",
-		value: function googleLogin(event) {
-			alert("Implement Me");
-		}
 	}]);
 
 	return CreateLoginPage;
 }(React.Component);
 
-ReactDOM.render(React.createElement(CreateLoginPage, null), document.getElementsByTagName('body')[0]);
+ReactDOM.render(React.createElement(CreateLoginPage, null), document.body);

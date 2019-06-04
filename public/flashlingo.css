@@ -3,8 +3,8 @@
     --card-font-size: 15pt;
     --dark-purple: #606B9B;
     --light-green: #70C7A9;
-    --light-purple: #b191d4;
     --logo-font-size: calc(15vw);
+    --light-purple: #b191d4;
 }
 
 * {
@@ -24,6 +24,7 @@ body {
 }
 
 button {
+    background-color: var(--dark-purple);
     border: none;
     border-radius: 20px;
     color: white;
@@ -42,6 +43,8 @@ button:focus {
 }
 
 button:hover {
+    background-color: darkslateblue;
+    box-shadow: 4px 7px #e0e0e0;
     cursor: pointer;
 }
 
@@ -118,14 +121,8 @@ main {
     background-color: green;
 }
 
-#startReview {
+#review-view-button {
     align-self: flex-start;
-    background-color: var(--dark-purple);
-}
-
-#startReview:hover {
-    background-color: var(--light-purple);
-    box-shadow: 4px 7px #e0e0e0;
 }
 
 #title {

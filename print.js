@@ -4,3 +4,4 @@ const sqlite3 = require('sqlite3').verbose();
 
 const db = new sqlite3.Database('flashcards.db');
 db.all('SELECT * FROM flashcards', (err, data) => { console.log(data); });
+db.all('SELECT * FROM users', (err, data) => { console.log(data); });
