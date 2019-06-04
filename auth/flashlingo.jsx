@@ -105,9 +105,22 @@ class App extends React.Component {
 	flipCard = () => {
 		const answer = document.getElementById('answer');
 		const card = this.state.card;
+		const prompt = document.getElementById('prompt');
 
-		if (answer.value.toLowerCase() == card.text.toLowerCase()) card.answered++;
+		prompt.textContent = '';
+		prompt.style.transform = 'rotateX(360deg)';
+		prompt.style.transitionDuration = '500ms';
 
+		if (answer.value.toLowerCase() == card.text.toLowerCase()) {
+			card.answered++;
+			prompt.innerHTML = '<p id="correct">CORRECT!</p></div>';
+			document.getElementById('correct').style.display = 'block';
+		}
+		else {
+			prompt.textContent = card.text;
+		}
+
+		// need to sleep here
 		card.asked++;
 		this.pickCard();
 		updateCard(card.id, card.asked, card.answered);
