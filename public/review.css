@@ -1,15 +1,42 @@
+@keyframes start-flip {
+    from { transform: rotateX(0deg); }
+    to { transform: rotateX(90deg); }
+}
+
+@keyframes end-flip {
+    from { transform: rotateX(90deg); }
+    to { transform: rotateX(0deg); }
+}
+
+.half-flip {
+    animation: start-flip 1s;
+}
+
+.end-flip {
+    animation: end-flip 1s;
+}
+
 #buttons {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    position: relative;
 }
 
 #correct {
-	background-color: var(--light-green);
-	border: solid green 4px;
-	color: green;
-	display: none;
-	padding: 20px 20px;
+    background-color: var(--light-green);
+    border: solid green 4px;
+    bottom: 0;
+    color: green;
+    display: none;
+    height: min-content;
+    left: 0;
+    margin: auto;
+    padding: 20px 20px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: min-content;
 }
 
 #next {
@@ -27,19 +54,19 @@
 }
 
 #prompt {
-	display: flex;
-	flex-direction: column;
-	height: 100%;
-	text-align: center; 
-	width: 100%;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    text-align: center; 
+    width: 100%;
 }
 
 #prompt p {
-	margin: auto;
+    margin: auto;
 }
 
 #review-cards {
-	display: flex;
+    display: flex;
     flex: 1 1 auto;
     flex-direction: column;
     justify-content: space-between;

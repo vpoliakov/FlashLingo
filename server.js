@@ -29,70 +29,70 @@ function isAuthenticated(req, res, next) {
 }
 
 function gotProfile(accessToken, refreshToken, profile, done) {
-	console.log('Got Google profile.');
-	const hash = crypto.createHash('sha256').update(profile.id + salt).digest('hex');
-	console.log('Hash:', hash);
+    console.log('Got Google profile.');
+    const hash = crypto.createHash('sha256').update(profile.id + salt).digest('hex');
+    console.log('Hash:', hash);
 
-	db.getUser(hash, id => {
-		console.log(id ? `Got user: ${id}` : 'New user.');
-		if (!id) db.addUser(hash);
-	});
+    db.getUser(hash, id => {
+        console.log(id ? `Got user: ${id}` : 'New user.');
+        if (!id) db.addUser(hash);
+    });
 
     done(null, hash);
 }
 
 function queryHandler(req, res, next) {
-	const key = 'AIzaSyAOD5XGQ1XdvLWHFXnqcgG6mdimebiLM_0';
-	const user = req.user.id; // user hash
-	const action = req.query.action;
-	
-	if (action === 'getCards') {
-		db.getCards(user, cards => { res.json(cards); });
-	} else if (action === 'updateCard') {
-		const id = req.query.id;
-		const asked = req.query.asked;
-		const answered = req.query.answered;
-		db.uppdateCard(id, asked, answered);
-	} else if (action === 'translate' || action === 'save') {
-		const text = req.query.message; // text to be translated
-	
-		function callback(err, resHead, resBody) {
-			if (err || resHead.error || resHead.statusCode != 200) throw 'API error';
+    const key = 'AIzaSyAOD5XGQ1XdvLWHFXnqcgG6mdimebiLM_0';
+    const user = req.user.id; // user hash
+    const action = req.query.action;
+    
+    if (action === 'getCards') {
+        db.getCards(user, cards => { res.json(cards); });
+    } else if (action === 'updateCard') {
+        const id = req.query.id;
+        const asked = req.query.asked;
+        const answered = req.query.answered;
+        db.uppdateCard(id, asked, answered);
+    } else if (action === 'translate' || action === 'save') {
+        const text = req.query.message; // text to be translated
+    
+        function callback(err, resHead, resBody) {
+            if (err || resHead.error || resHead.statusCode != 200) throw 'API error';
 
-			const translation = resBody.data.translations[0].translatedText;
-			res.json(translation);
+            const translation = resBody.data.translations[0].translatedText;
+            res.json(translation);
 
-			if (action === 'save') db.addCard(user, text, translation);
-		}
+            if (action === 'save') db.addCard(user, text, translation);
+        }
 
-		request({
-				url: `https://translation.googleapis.com/language/translate/v2?key=${key}`,
-				method: 'POST',
-				headers: { 'content-type': 'application/json' },
-				json: {
-					source: 'en',
-					target: 'sv',
-					q: [text]
-				}
-			},
-			callback
-		);
-	}	
+        request({
+                url: `https://translation.googleapis.com/language/translate/v2?key=${key}`,
+                method: 'POST',
+                headers: { 'content-type': 'application/json' },
+                json: {
+                    source: 'en',
+                    target: 'sv',
+                    q: [text]
+                }
+            },
+            callback
+        );
+    }	
 }
 
 function fileNotFound(req, res) {
-	const url = req.url;
-	res.type('text/plain');
-	res.status(404);
-	res.send(`Cannot find ${url}`);
+    const url = req.url;
+    res.type('text/plain');
+    res.status(404);
+    res.send(`Cannot find ${url}`);
 }
 
 passport.use(new GoogleStrategy({
-		clientID: '188527312535-b738f8ejv2aorq4nskg86n0anbjunf6a.apps.googleusercontent.com',
-		clientSecret: 'vImo_iJxnijW5YsogeD5ZmcK',
-		callbackURL: '/auth/redirect'
-	},
-	gotProfile
+        clientID: '188527312535-b738f8ejv2aorq4nskg86n0anbjunf6a.apps.googleusercontent.com',
+        clientSecret: 'vImo_iJxnijW5YsogeD5ZmcK',
+        callbackURL: '/auth/redirect'
+    },
+    gotProfile
 ));
 
 passport.serializeUser((id, done) => { done(null, id); });
@@ -111,14 +111,14 @@ app.use(passport.session());
 app.get('/*', express.static('public'));
 app.get('/auth/google', passport.authenticate('google', { scope: ['profile'] }) );
 app.get('/auth/redirect',
-	function (req, res, next) {
-	    console.log('Redirecting: auth/redirect');
-	    next();
-	},
-	passport.authenticate('google'),
-	function (req, res) {
-	    console.log('Authenticated.');
-	    res.redirect('/auth/flashlingo.html');
+    function (req, res, next) {
+        console.log('Redirecting: auth/redirect');
+        next();
+    },
+    passport.authenticate('google'),
+    function (req, res) {
+        console.log('Authenticated.');
+        res.redirect('/auth/flashlingo.html');
     }
 );
 app.get('/auth/*', isAuthenticated, express.static('.'));

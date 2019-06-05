@@ -6,6 +6,13 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+function animate(element, animation) {
+	element.classList.add(animation);
+	setTimeout(function () {
+		element.classList.remove(animation);
+	}, 1000);
+}
+
 function makeRequest(callback, url) {
 	function request(command, url) {
 		var xhr = new XMLHttpRequest();
@@ -97,7 +104,12 @@ function Main(self) {
 				React.createElement(
 					'button',
 					{ id: 'add-view-button', onClick: self.app.addView },
-					'Add'
+					'Add Cards'
+				),
+				React.createElement(
+					'p',
+					{ id: 'correct' },
+					'CORRECT!'
 				),
 				React.createElement(
 					'button',
@@ -111,15 +123,7 @@ function Main(self) {
 				React.createElement(
 					Card,
 					null,
-					React.createElement(
-						'div',
-						{ id: 'prompt' },
-						React.createElement(
-							'p',
-							{ id: 'correct' },
-							'CORRECT!'
-						)
-					)
+					React.createElement('div', { id: 'prompt' })
 				),
 				React.createElement('div', { id: 'buffer' }),
 				React.createElement(
@@ -173,43 +177,6 @@ var App = function (_React$Component) {
 			);
 		};
 
-		_this.flipCard = function () {
-			var answer = document.getElementById('answer');
-			var card = _this.state.card;
-
-			if (answer.value.toLowerCase() == card.text.toLowerCase()) card.answered++;
-
-			card.asked++;
-			_this.pickCard();
-			updateCard(card.id, card.asked, card.answered);
-			answer.value = '';
-		};
-
-		_this.inputListener = function (event) {
-			var enterPressed = event.keyCode == 13 || event.charCode == 13;
-
-			if (_this.state.view == 'add') {
-				if (enterPressed) {
-					_this.saveCard();
-				} else {
-					translate(function (data) {
-						document.getElementById('output').textContent = data;
-					}, document.getElementById('input').value);
-				}
-			} else if (_this.state.view == 'review' && enterPressed) {
-				_this.flipCard();
-			}
-
-			return false;
-		};
-
-		_this.saveCard = function () {
-			translate(function (data) {
-				document.getElementById('input').value = '';
-				document.getElementById('output').textContent = 'Translation';
-			}, document.getElementById('input').value, true);
-		};
-
 		_this.addView = function () {
 			_this.state.view = 'add';
 			ReactDOM.render(React.createElement(App, null), document.getElementById('app'));
@@ -238,6 +205,7 @@ var App = function (_React$Component) {
 					if (pick <= 0) {
 						_this.state.card = card;
 						document.getElementById('prompt').textContent = card.translation;
+						document.getElementById('correct').style.display = 'none';
 						return card;
 					}
 				}
@@ -264,6 +232,58 @@ var App = function (_React$Component) {
 				_this.state.cards = cards;
 				_this.pickCard();
 			});
+		};
+
+		_this.flipCard = function () {
+			var answer = document.getElementById('answer');
+			var card = _this.state.card;
+			var correct = document.getElementById('correct');
+			var prompt = document.getElementById('prompt');
+			var promptCard = prompt.parentElement;
+			var goodAnswer = answer.value.toLowerCase() == card.text.toLowerCase();
+
+			if (goodAnswer) {
+				card.answered++;
+				correct.style.display = 'unset';
+			} else {
+				animate(promptCard, 'start-flip');
+				prompt.textContent = card.text;
+				animate(promptCard, 'end-flip');
+			}
+
+			card.asked++;
+			updateCard(card.id, card.asked, card.answered);
+
+			setTimeout(function () {
+				_this.pickCard();
+				answer.value = '';
+			}, goodAnswer ? 1000 : 2500);
+		};
+
+		_this.inputListener = function (event) {
+			var enterPressed = event.key == 'Enter';
+			var backquotePressed = event.key == '\`';
+
+			if (_this.state.view == 'add') {
+				if (enterPressed) {
+					_this.saveCard();
+				} else {
+					translate(function (data) {
+						document.getElementById('output').textContent = data;
+					}, document.getElementById('input').value);
+				}
+			} else if (_this.state.view == 'review') {
+				if (enterPressed) _this.flipCard();
+			}
+
+			return false;
+		};
+
+		_this.saveCard = function () {
+			translate(function (data) {
+				document.getElementById('input').value = '';
+				document.getElementById('output').textContent = 'Translation';
+			}, document.getElementById('input').value, true);
 		};
 
 		_this.switchUser = function () {
