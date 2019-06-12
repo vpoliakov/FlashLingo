@@ -111,8 +111,7 @@ class App extends React.Component {
     }
 
     addView = () => {
-        this.state.view = 'add';
-        ReactDOM.render(<App/>, document.getElementById('app'));
+        this.setState({ view: 'add' });
     }
     
     pickCard = () => {
@@ -134,8 +133,7 @@ class App extends React.Component {
     }
 
     reviewView = () => {
-        this.state.view = 'review';
-        ReactDOM.render(<App/>, document.getElementById('app'));
+        this.setState({ view: 'review' });
         getCards(cards => {
             this.state.cards = cards;
             this.pickCard();

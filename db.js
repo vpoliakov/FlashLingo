@@ -42,8 +42,8 @@ class Database extends sqlite3.Database {
             }
 
             this.run(
-                `INSERT INTO flashcards (user, text, translation, asked, answered)
-                        VALUES(${user}, "${text}", "${translation}", ${asked}, ${answered})`,
+                'INSERT INTO flashcards (user, text, translation, asked, answered) VALUES(?, ?, ?, ?, ?)',
+                [user, text, translation, asked, answered],
                 () => { console.log('Adding: ', user, text, translation); }
             );
         });
@@ -51,10 +51,14 @@ class Database extends sqlite3.Database {
 
     uppdateCard(id, asked, answered) {
         this.get(
-            `SELECT * FROM flashcards WHERE id="${id}"`,
+            'SELECT * FROM flashcards WHERE id = ?',
+            [id],
             (err, card) => {
                 if (!card || !card.id) throw 'could not update the card';
-                this.run(`REPLACE INTO flashcards VALUES(${card.id}, ${card.user}, "${card.text}", "${card.translation}", ${asked}, ${answered})`);
+                this.run(
+                    'REPLACE INTO flashcards VALUES(?, ?, ?, ?, ?, ?)',
+                    [card.id, card.user, card.text, card.translation, asked, answered]
+                    );
             }
         );
     }
@@ -64,7 +68,8 @@ class Database extends sqlite3.Database {
 
         this.getUser(hash, user => {
             this.all(
-                `SELECT id, text, translation, asked, answered FROM flashcards WHERE user="${user}"`,
+                'SELECT id, text, translation, asked, answered FROM flashcards WHERE user = ?',
+                [user],
                 (err, cards) => { callback(cards); }
             );
         });
@@ -77,7 +82,10 @@ class Database extends sqlite3.Database {
             'SELECT * FROM users',
             (err, data) => {
                 const id = data.length + 1 || 1;
-                this.run(`INSERT INTO users VALUES(${id}, "${hash}")`);
+                this.run(
+                    'INSERT INTO users VALUES(?, ?)',
+                    [id, hash]
+                );
             }
         );
     }
@@ -86,7 +94,8 @@ class Database extends sqlite3.Database {
         if (hash.length != 64 || hash.includes(';')) throw 'invalid hash';
 
         this.get(
-            `SELECT id FROM users WHERE hash = "${hash}"`,
+            'SELECT id FROM users WHERE hash = ?',
+            [hash],
             (err, data) => { callback(data && data.id ? data.id : undefined); }
         );
     }
