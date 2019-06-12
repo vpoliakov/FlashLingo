@@ -1,5 +1,6 @@
 'use strict';
 
+// Actual Front End
 function animate(element, animation) {
     element.classList.add(animation);
     setTimeout(() => {
@@ -7,39 +8,24 @@ function animate(element, animation) {
     }, 1000);	
 }
 
-function makeRequest(callback, url) {
-    function request(command, url) {
-        const xhr = new XMLHttpRequest();
-        xhr.open(command, url, true);
-        return xhr;
+function translate(callback, input) {
+    const xhr = new XMLHttpRequest();
+    const key = 'AIzaSyAOD5XGQ1XdvLWHFXnqcgG6mdimebiLM_0';
+    const url = 'https://translation.googleapis.com/language/translate/v2?key=' + key;
+
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader('content-type', 'application/json');
+
+    xhr.onload = function () {
+        const translation = JSON.parse(xhr.responseText).data.translations[0].translatedText;
+        callback(translation);
     }
 
-    const xhr = request('GET', url);
-
-    if (!xhr) throw 'Error, something went wrong...';
-    xhr.onerror = () => { throw 'Error, something went wrong...'; };
-
-    xhr.onload = () => {
-        const data = JSON.parse(xhr.responseText);
-        callback(data);
-    };
-
-    xhr.send();
-}
-
-function translate(callback, input, save) {
-    const url = `query?action=${save ? 'save' : 'translate'}&message=${input}`;
-    makeRequest(callback, url);
-}
-
-function getCards(callback) {
-    const url = `query?action=getCards`;
-    makeRequest(callback, url);
-}
-
-function updateCard(id, asked, answered) {
-    const url = `query?action=updateCard&id=${id}&asked=${asked}&answered=${answered}`;
-    makeRequest(() => {}, url);
+    xhr.send(JSON.stringify({
+        source: 'en',
+        target: 'sv',
+        q: [input]
+    }));
 }
 
 function Card(self) {
@@ -134,10 +120,7 @@ class App extends React.Component {
 
     reviewView = () => {
         this.setState({ view: 'review' });
-        getCards(cards => {
-            this.state.cards = cards;
-            this.pickCard();
-        });
+        this.pickCard();
     }
 
     flipCard = () => {
@@ -168,37 +151,31 @@ class App extends React.Component {
 
     inputListener = (event) => {
         const enterPressed = event.key == 'Enter';
-        const backquotePressed = event.key == '\`';
 
         if (this.state.view == 'add') {
-            if (enterPressed) {
-                this.saveCard();
+            const text = document.getElementById('input').value; // english text
+            const translation = document.getElementById('output').textContent;
+
+            if (enterPressed && text.length) {
+                this.state.card = {
+                    text,
+                    translation,
+                    asked: 0,
+                    answered: 0
+                }
+
+                this.state.cards.push(card);
             } else {
                 translate(
-                    data => { document.getElementById('output').textContent = data; },
-                    document.getElementById('input').value
+                    translation => { document.getElementById('output').textContent = translation; },
+                    text
                 );
             }
         } else if (this.state.view == 'review') {
             if (enterPressed) this.flipCard();
         }
 
-        return false;
-    }
-
-    saveCard = () => {
-        translate(
-            data => {
-                document.getElementById('input').value = '';
-                document.getElementById('output').textContent = 'Translation';
-            },
-            document.getElementById('input').value,
-            true
-        );
-    }
-
-    switchUser = () => {
-        window.location.href = "/login.html";
+        return false; // prevents miscellaneous default behaviors
     }
 }
 

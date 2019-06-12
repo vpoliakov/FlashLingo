@@ -1,12 +1,11 @@
+'use strict';
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-'use strict';
-
-// Actual Front End
 function animate(element, animation) {
     element.classList.add(animation);
     setTimeout(function () {
@@ -25,7 +24,7 @@ function translate(callback, input) {
     xhr.onload = function () {
         var translation = JSON.parse(xhr.responseText).data.translations[0].translatedText;
         callback(translation);
-    }
+    };
 
     xhr.send(JSON.stringify({
         source: 'en',
@@ -168,7 +167,7 @@ var App = function (_React$Component) {
         _this.pickCard = function () {
             var cards = _this.state.cards;
             cards.map(function (card) {
-                card.score = Math.pow(1 - card.answered / (card.asked || 1), 2) + .1;
+                card.score = Math.pow(1 - card.answered / (card.asked || 1), 2) + .3;
             });
             var scoresSum = cards.reduce(function (sum, card) {
                 return sum + card.score;
@@ -181,15 +180,15 @@ var App = function (_React$Component) {
 
             try {
                 for (var _iterator = cards[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
-                    var _card = _step.value;
+                    var card = _step.value;
 
-                    pick -= _card.score;
+                    pick -= card.score;
 
                     if (pick <= 0) {
-                        _this.state.card = _card;
-                        document.getElementById('prompt').textContent = _card.translation;
+                        _this.state.card = card;
+                        document.getElementById('prompt').textContent = card.translation;
                         document.getElementById('correct').style.display = 'none';
-                        return _card;
+                        return card;
                     }
                 }
             } catch (err) {
@@ -209,7 +208,9 @@ var App = function (_React$Component) {
         };
 
         _this.reviewView = function () {
-            _this.setState({ view: 'review' });
+            _this.setState({ view: 'review' }, function () {
+                _this.pickCard();
+            });
         };
 
         _this.flipCard = function () {
@@ -230,7 +231,6 @@ var App = function (_React$Component) {
             }
 
             card.asked++;
-            updateCard(card.id, card.asked, card.answered);
 
             setTimeout(function () {
                 _this.pickCard();
@@ -254,6 +254,9 @@ var App = function (_React$Component) {
                     };
 
                     _this.state.cards.push(_this.state.card);
+
+                    document.getElementById('input').value = '';
+                    document.getElementById('output').textContent = 'Translation';
                 } else {
                     translate(function (translation) {
                         document.getElementById('output').textContent = translation;
