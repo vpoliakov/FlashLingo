@@ -268,6 +268,8 @@ var App = function (_React$Component) {
 
         _this.saveCard = function () {
             _this.state.cards.push(_this.state.card);
+            document.getElementById('input').value = '';
+            document.getElementById('output').textContent = 'Translation';
         };
 
         _this.switchUser = function () {

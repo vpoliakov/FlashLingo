@@ -180,6 +180,8 @@ class App extends React.Component {
 
     saveCard = () => {
         this.state.cards.push(this.state.card);
+        document.getElementById('input').value = '';
+        document.getElementById('output').textContent = 'Translation';
     }
 
     switchUser = () => {
