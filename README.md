@@ -37,3 +37,8 @@ View the demo: https://vpoliakov.github.io/FlashLingo/ (optimized for Chrome)
 - npm passport https://www.npmjs.com/package/passport
 - npm cookie-session https://www.npmjs.com/package/cookie-session
 - Node.js built-in crypto module
+
+## Files worth looking at
+- server.js 
+- db.js
+- auth/flashlingo.jsx
