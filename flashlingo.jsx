@@ -140,7 +140,6 @@ class App extends React.Component {
         }
 
         card.asked++;
-        updateCard(card.id, card.asked, card.answered);
         
         setTimeout(() => {
             this.pickCard();

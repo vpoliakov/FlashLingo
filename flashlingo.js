@@ -231,7 +231,6 @@ var App = function (_React$Component) {
             }
 
             card.asked++;
-            updateCard(card.id, card.asked, card.answered);
 
             setTimeout(function () {
                 _this.pickCard();
