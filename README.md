@@ -1,8 +1,9 @@
 # FlashLingo
 Differences between the demo and the actual app:
 - The server has been completely stripped:
-  - There is no need to login
-  - There is no database; all cards are valid only for the active session
+- There is no need to login
+- There is no database; all cards are valid only for the active session
+
 View the demo: https://vpoliakov.github.io/FlashLingo/ (optimized for Chrome)
 
 ## What does it do?
@@ -25,7 +26,7 @@ View the demo: https://vpoliakov.github.io/FlashLingo/ (optimized for Chrome)
 
 ![image](https://user-images.githubusercontent.com/10080683/59396688-c1c65480-8d3e-11e9-8dc0-9afaf8a52740.png)
 
-## Technologies used:
+## Technologies used
 - React with jsx
 - JavaScript
 - Node.js
