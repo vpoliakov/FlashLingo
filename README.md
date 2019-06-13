@@ -12,14 +12,14 @@ View the demo: https://vpoliakov.github.io/FlashLingo/ (optimized for Chrome)
   - If the user has logged in during the last 6 hours, uses cookies to authenticate the user
   - Does not store any data about the user except the user's Google id (salted and hashed using SHA-256)
 - Allows the user to:
-![image](https://user-images.githubusercontent.com/10080683/59396328-1f59a180-8d3d-11e9-8f53-96092e3fdf4f.png)
+![image](https://user-images.githubusercontent.com/10080683/59398605-b32f6b80-8d45-11e9-8383-e2e370b3fb9e.png)
   - Create flash cards for Swedish (eftersom svenska är fantastik) words and phrases (input by the user)
     - Translation is done using the Google Translation API
   - Review and answer the cards
-  ![image](https://user-images.githubusercontent.com/10080683/59396451-ae66b980-8d3d-11e9-8120-0162d9be35ec.png)
+  ![image](https://user-images.githubusercontent.com/10080683/59398650-cf330d00-8d45-11e9-9f57-eefadb624af0.png)
     - Cards are picked randomly with probabilities depending on the correct / incorrect answer ratio
     - On a correct answer, a "Correct!" message pops up
-    ![image](https://user-images.githubusercontent.com/10080683/59396426-92fbae80-8d3d-11e9-94d5-ee0510e45556.png)
+    ![image](https://user-images.githubusercontent.com/10080683/59398669-e07c1980-8d45-11e9-89e7-85bde371cc27.png)
     - On an incorrect answer, the card flips and displays the correct answer
 - Stores the cards in a SQLite database
 - Works in all resolutions
