@@ -12,7 +12,7 @@ const GoogleStrategy = require('passport-google-oauth20');
 // if db file does not exist, create it, else open it
 const db = new Database(!fs.existsSync('flashcards.db')); // the argument is whether the file exists
 const port = 55395;
-const salt = 'next game forest nothing';
+const salt = 'next game forest nothing'; // salt for crypto
 
 function printURL(req, res, next) {
     console.log('Serving:', req.url);
@@ -42,7 +42,7 @@ function gotProfile(accessToken, refreshToken, profile, done) {
 }
 
 function queryHandler(req, res, next) {
-    const key = 'AIzaSyAOD5XGQ1XdvLWHFXnqcgG6mdimebiLM_0';
+    const key = 'AIzaSyAOD5XGQ1XdvLWHFXnqcgG6mdimebiLM_0'; // the key is valid only for vpoliakov.github.io/FlashLingo
     const user = req.user.id; // user hash
     const action = req.query.action;
     
@@ -65,14 +65,15 @@ function queryHandler(req, res, next) {
             if (action === 'save') db.addCard(user, text, translation);
         }
 
+        // make the actual request to the Google Translate API
         request({
                 url: `https://translation.googleapis.com/language/translate/v2?key=${key}`,
                 method: 'POST',
                 headers: { 'content-type': 'application/json' },
                 json: {
-                    source: 'en',
-                    target: 'sv',
-                    q: [text]
+                    source: 'en', // original languge
+                    target: 'sv', // language to be translated into
+                    q: [text] // what to translate
                 }
             },
             callback
@@ -102,7 +103,7 @@ const app = express();
 
 app.use('/', printURL);
 app.use(cookieSession({
-    maxAge: 6 * 60 * 60 * 1000,
+    maxAge: 6 * 60 * 60 * 1000, // 6 hours
     keys: [salt]
 }));
 app.use(passport.initialize());
