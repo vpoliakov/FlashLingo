@@ -1,5 +1,7 @@
 'use strict';
 
+// Actual Front End
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
@@ -167,7 +169,7 @@ var App = function (_React$Component) {
         _this.pickCard = function () {
             var cards = _this.state.cards;
             cards.map(function (card) {
-                card.score = Math.pow(1 - card.answered / (card.asked || 1), 2) + .3;
+                card.score = Math.pow(1 - card.answered / (card.asked || 1), 2) + .1;
             });
             var scoresSum = cards.reduce(function (sum, card) {
                 return sum + card.score;
@@ -208,9 +210,7 @@ var App = function (_React$Component) {
         };
 
         _this.reviewView = function () {
-            _this.setState({ view: 'review' }, function () {
-                _this.pickCard();
-            });
+            _this.setState({ view: 'review' }, () => { _this.pickCard(); });
         };
 
         _this.flipCard = function () {
@@ -231,6 +231,7 @@ var App = function (_React$Component) {
             }
 
             card.asked++;
+            updateCard(card.id, card.asked, card.answered);
 
             setTimeout(function () {
                 _this.pickCard();
@@ -246,20 +247,16 @@ var App = function (_React$Component) {
                 var translation = document.getElementById('output').textContent;
 
                 if (enterPressed && text.length) {
-                    _this.state.card = {
-                        text: text,
-                        translation: translation,
-                        asked: 0,
-                        answered: 0
-                    };
-
-                    _this.state.cards.push(_this.state.card);
-
-                    document.getElementById('input').value = '';
-                    document.getElementById('output').textContent = 'Translation';
+                    _this.saveCard(text, translation);
                 } else {
                     translate(function (translation) {
                         document.getElementById('output').textContent = translation;
+                        _this.state.card = {
+                            text: text,
+                            translation: translation,
+                            asked: 0,
+                            answered: 0
+                        };
                     }, text);
                 }
             } else if (_this.state.view == 'review') {
@@ -267,6 +264,14 @@ var App = function (_React$Component) {
             }
 
             return false; // prevents miscellaneous default behaviors
+        };
+
+        _this.saveCard = function () {
+            _this.state.cards.push(_this.state.card);
+        };
+
+        _this.switchUser = function () {
+            alert('The demo does not support switching users');
         };
 
         _this.state = {

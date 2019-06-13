@@ -119,8 +119,7 @@ class App extends React.Component {
     }
 
     reviewView = () => {
-        this.setState({ view: 'review' });
-        this.pickCard();
+        this.setState({ view: 'review' }, () => { this.pickCard(); });
     }
 
     flipCard = () => {
@@ -157,17 +156,18 @@ class App extends React.Component {
             const translation = document.getElementById('output').textContent;
 
             if (enterPressed && text.length) {
-                this.state.card = {
-                    text,
-                    translation,
-                    asked: 0,
-                    answered: 0
-                }
-
-                this.state.cards.push(card);
+                this.saveCard(text, translation);
             } else {
                 translate(
-                    translation => { document.getElementById('output').textContent = translation; },
+                    translation => {
+                        document.getElementById('output').textContent = translation;
+                        this.state.card = {
+                            text,
+                            translation,
+                            asked: 0,
+                            answered: 0
+                        }
+                    },
                     text
                 );
             }
@@ -176,6 +176,14 @@ class App extends React.Component {
         }
 
         return false; // prevents miscellaneous default behaviors
+    }
+
+    saveCard = () => {
+        this.state.cards.push(this.state.card);
+    }
+
+    switchUser = () => {
+        alert('The demo does not support switching users');
     }
 }
 
