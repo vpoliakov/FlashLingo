@@ -28,7 +28,7 @@ function isAuthenticated(req, res, next) {
     }
 }
 
-function gotProfile(accessToken, refreshToken, profile, done) {
+function processUser(accessToken, refreshToken, profile, done) {
     console.log('Got Google profile.');
     const hash = crypto.createHash('sha256').update(profile.id + salt).digest('hex');
     console.log('Hash:', hash);
@@ -46,14 +46,14 @@ function queryHandler(req, res, next) {
     const user = req.user.id; // user hash
     const action = req.query.action;
     
-    if (action === 'getCards') {
+    if (action == 'getCards') {
         db.getCards(user, cards => { res.json(cards); });
-    } else if (action === 'updateCard') {
+    } else if (action == 'updateCard') {
         const id = req.query.id;
         const asked = req.query.asked;
         const answered = req.query.answered;
-        db.uppdateCard(id, asked, answered);
-    } else if (action === 'translate' || action === 'save') {
+        db.updateCard(id, asked, answered);
+    } else if (action == 'translate' || action == 'save') {
         const text = req.query.message; // text to be translated
     
         function callback(err, resHead, resBody) {
@@ -62,7 +62,7 @@ function queryHandler(req, res, next) {
             const translation = resBody.data.translations[0].translatedText;
             res.json(translation);
 
-            if (action === 'save') db.addCard(user, text, translation);
+            if (action == 'save') db.addCard(user, text, translation);
         }
 
         // make the actual request to the Google Translate API
@@ -93,7 +93,7 @@ passport.use(new GoogleStrategy({
         clientSecret: 'vImo_iJxnijW5YsogeD5ZmcK',
         callbackURL: '/auth/redirect'
     },
-    gotProfile
+    processUser
 ));
 
 passport.serializeUser((id, done) => { done(null, id); });

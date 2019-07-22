@@ -1,11 +1,12 @@
 const sqlite3 = require('sqlite3').verbose();
 
+// A class implementing a database for flashcards
 class Database extends sqlite3.Database {
-    constructor(createTable = true) {
+    constructor(createTables = true) {
         super('flashcards.db');
         const db = this;
 
-        if (createTable) {
+        if (createTables) { // run when initializing the db
             db.run(
                 'CREATE TABLE flashcards(\
                     id INTEGER PRIMARY KEY,\
@@ -28,9 +29,38 @@ class Database extends sqlite3.Database {
         }
     }
 
+    addUser(hash) {
+        if (hash.length != 64 || hash.includes(';')) throw 'invalid hash';
+
+        const db = this;
+        db.all(
+            'SELECT * FROM users',
+            (err, data) => {
+                const id = data.length + 1 || 1;
+                db.run(
+                    'INSERT INTO users VALUES(?, ?)',
+                    [id, hash]
+                );
+            }
+        );
+    }
+    
+    getUser(hash, callback) {
+        if (hash.length != 64 || hash.includes(';')) throw 'invalid hash';
+
+        const db = this;
+        db.get(
+            'SELECT id FROM users WHERE hash = ?',
+            [hash],
+            (err, data) => { callback(data && data.id ? data.id : undefined); }
+        );
+    }
+
     addCard(hash, text, translation, asked = 0, answered = 0) {
-        this.getUser(hash, user => {
-            try {
+        const db = this;
+
+        db.getUser(hash, user => {
+            try { // validate and format input
                 if (isNaN(user) || user % 1 !== 0) throw `user (${user}) must be an int`;	
                 if (typeof text != 'string' || typeof translation != 'string') throw 'text and translation must be strings';
                 if (text.length > 100) text = text.substring(0, 100);
@@ -41,7 +71,7 @@ class Database extends sqlite3.Database {
                 return;
             }
 
-            this.run(
+            db.run(
                 'INSERT INTO flashcards (user, text, translation, asked, answered) VALUES(?, ?, ?, ?, ?)',
                 [user, text, translation, asked, answered],
                 () => { console.log('Adding: ', user, text, translation); }
@@ -49,16 +79,18 @@ class Database extends sqlite3.Database {
         });
     }
 
-    uppdateCard(id, asked, answered) {
-        this.get(
+    updateCard(id, asked, answered) {
+        const db = this;
+
+        db.get(
             'SELECT * FROM flashcards WHERE id = ?',
             [id],
             (err, card) => {
                 if (!card || !card.id) throw 'could not update the card';
-                this.run(
+                db.run(
                     'REPLACE INTO flashcards VALUES(?, ?, ?, ?, ?, ?)',
                     [card.id, card.user, card.text, card.translation, asked, answered]
-                    );
+                );
             }
         );
     }
@@ -66,42 +98,14 @@ class Database extends sqlite3.Database {
     getCards(hash, callback) {
         if (hash.length != 64 || hash.includes(';')) throw 'invalid hash';
 
-        this.getUser(hash, user => {
-            this.all(
+        const db = this;
+        db.getUser(hash, user => {
+            db.all(
                 'SELECT id, text, translation, asked, answered FROM flashcards WHERE user = ?',
                 [user],
                 (err, cards) => { callback(cards); }
             );
         });
-    }
-
-    addUser(hash) {
-        if (hash.length != 64 || hash.includes(';')) throw 'invalid hash';
-
-        this.all(
-            'SELECT * FROM users',
-            (err, data) => {
-                const id = data.length + 1 || 1;
-                this.run(
-                    'INSERT INTO users VALUES(?, ?)',
-                    [id, hash]
-                );
-            }
-        );
-    }
-
-    getUser(hash, callback) {
-        if (hash.length != 64 || hash.includes(';')) throw 'invalid hash';
-
-        this.get(
-            'SELECT id FROM users WHERE hash = ?',
-            [hash],
-            (err, data) => { callback(data && data.id ? data.id : undefined); }
-        );
-    }
-
-    print() {
-        this.all('SELECT * FROM flashcards');
     }
 }
 
