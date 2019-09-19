@@ -1,10 +1,4 @@
 # FlashLingo
-Differences between the demo and the actual app:
-- The server has been completely stripped
-- There is no need to login
-- There is no database; all cards are valid only for the active session
-
-View the demo: https://vpoliakov.github.io/FlashLingo/ (optimized for Chrome)
 
 ## What does it do?
 - Requires the user to login using Google authentication
